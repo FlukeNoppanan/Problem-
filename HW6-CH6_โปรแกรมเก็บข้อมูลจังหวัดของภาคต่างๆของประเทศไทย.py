@@ -1,4 +1,4 @@
-# 1. นาย ณพนันท์ ศรีเกื้อกลิ่น 6706022510204 , 2. , 3.
+# 1. นาย ณพนันท์ ศรีเกื้อกลิ่น 6706022510204 , 2. นาย ศุภกร สิริเกื้อกูลชัย 6706022510174 , 3. นาย เจตริล เจริญทอง 6706022510425
 Thailand = {'NORTH': ['CHIANG MAI', 'CHIANG RAI', 'LAMPANG', 'LAMPHUN', 'MAE HONG SON', 'NAN', 'PHAYAO', 'PHRAE', 'UTTARADIT'], 
             'NORTHEAST': ['AMNAT CHAROEN', 'BUENG KAN', 'BURI RAM', 'CHAIYAPHUM', 'KALASIN', 'KHON KAEN', 'LOEI', 'MAHA SARAKHAM', 'MUKDAHAN', 'NAKHON PHANOM', 'NAKHON RATCHASIMA', 'NONG BUA LAM PHU', 'NONG KHAI', 'ROI ET', 'SAKON NAKHON', 'SI SA KET', 'SURIN', 'UBON RATCHATHANI', 'UDON THANI', 'YASOTHON'], 
             'CENTRAL': ['ANG THONG', 'BANGKOK', 'CHAI NAT', 'KAMPHAENG PHET', 'LOP BURI', 'NAKHON NAYOK', 'NAKHON PATHOM', 'NAKHON SAWAN', 'NONTHABURI', 'PATHUM THANI', 'PHRA NAKHON SI AYUTTHAYA', 'PHICHIT', 'PHITSANULOK', 'SAMUT PRAKAN', 'SAMUT SAKHON', 'SAMUT SONGKHRAM', 'SARABURI', 'SING BURI', 'SUPHAN BURI', 'UTHAI THANI'], 
@@ -9,42 +9,54 @@ Thailand = {'NORTH': ['CHIANG MAI', 'CHIANG RAI', 'LAMPANG', 'LAMPHUN', 'MAE HON
 def InsertData(dict):
     key = input("Please enter the name of the region.: ")
     value = input("Please enter the name of the province.: ")
+    if key == '':
+        return print("Please enter the name of the region.")
     if key.upper() in dict:
+        if value == '':
+            return print("Please enter the name of the province.")
+        if value.upper() in dict[key.upper()]:
+            return print("The information is already in the system.")
         dict[key.upper()].append(value.upper())
     else:
-        dict[key] = [value]
-    print("Information added successfully")
+        if value == '':
+            dict[key.upper()] = []
+        else:
+            dict[key.upper()] = [value.upper()]
+    return print("Information added successfully.")
 
-def UpdateData(s,dict):
-    for key, value in dict.items():
-        for i in value:
-            if i == s.upper():
-                new = input("Please enter a new name: ")
-                value[value.index(i)] = new.upper()
-                print("The information has been edited: ", value)
-    if s not in dict:
-        print("No information found")
+def UpdateData(input_value,dict):
+    for region, province in dict.items():
+        if input_value.upper() in province:
+            print(f"province {input_value} in {region}")
+            new_province = input("Please enter the new province name: ")
+            if new_province == '':
+                return print("Please enter the new province name.")
+            if new_province.upper() in province:
+                return print("The information is already in the system.")
+            province[province.index(input_value.upper())] = new_province.upper()
+            return print("Information updated successfully.")
+    return print("No information found.")
+
 
 def SearchData(s,dict):
     for key, value in dict.items():
         for i in value:
             if i == s.upper():
-                print(f"province {s} in {key}")
-    if s not in dict:
-        print("No information found")
+                return print(f"province {s.upper()} in {key}")
+    return print("No information found.")
 
-def DeleteData(s,dict):
-        if s.upper() in dict:
-            del dict[s.upper()]
-            print("Information deleted successfully")
-        else:
-            for key, value in dict.items():
-                for i in value:
-                    if i == s.upper():
-                        value.remove(i)
-                        print("Information deleted successfully")
-        if s not in dict:
-            print("No information found")
+def DeleteData(input_value,dict,is_region=False):
+    if is_region:
+        if input_value.upper() in dict:
+            del dict[input_value.upper()]
+            return print("Information deleted successfully")
+        print("No information found.")
+    else:
+        for key, value in dict.items():
+            if input_value.upper() in value:
+                value.remove(input_value.upper())
+                return print("Information deleted successfully")
+        print("No information found.")
 
 def ViewAllData(data_dict):
     for key, values in data_dict.items():
@@ -68,7 +80,7 @@ def main():
         try:
             choice = int(input("Please select menu: "))
         except ValueError:
-            print("Please select again , only number 1-6")
+            print("Please select again , only number 1-6 are available")
             continue
         print("------------------------------------------------")
         if choice == 1:
@@ -86,10 +98,10 @@ def main():
             choice1 = int(input("Please select menu: "))
             if choice1 == 1:
                 s = input("Please enter the name of the region you want to delete: ")
-                DeleteData(s, Thailand)
+                DeleteData(s, Thailand, True)
             elif choice1 == 2:
                 s = input("Please enter the name of the province you want to delete: ")
-                DeleteData(s, Thailand)
+                DeleteData(s, Thailand, False)
             else:
                 print("Please select again.")
         elif choice == 5:
