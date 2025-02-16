@@ -50,8 +50,9 @@ def ViewAllData(data_dict):
     for key, values in data_dict.items():
         print(f"{key}:")
         for i, value in enumerate(values, 1):
-            print(f"  {value}", end=" | " if i % 4 != 0 else " |\n")  
+            print(f" {value}", end=" | " if i % 5 != 0 else " |\n")  
         print("\n") 
+
 
 def main():
     while True:
